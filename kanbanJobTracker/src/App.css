@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+/* ── Design Tokens ─────────────────────────────────────────── */
+:root {
+  --bg-base:        #0d0f14;
+  --bg-surface:     #13161e;
+  --bg-card:        #1a1e29;
+  --bg-card-hover:  #1f2433;
+  --bg-input:       #111520;
+
+  --border:         rgba(255,255,255,0.07);
+  --border-focus:   rgba(255,255,255,0.18);
+
+  --text-primary:   #f0f2f8;
+  --text-secondary: #8892b0;
+  --text-muted:     #4a526e;
+
+  --accent-blue:    #4f9cf9;
+  --accent-amber:   #f5a623;
+  --accent-green:   #3ecf8e;
+  --accent-red:     #f76363;
+  --accent-teal:    #38bdf8;
+  --accent-purple:  #a78bfa;
+  --accent-rose:    #fb7185;
+
+  --col-blue:       #4f9cf9;
+  --col-amber:      #f5a623;
+  --col-green:      #3ecf8e;
+  --col-red:        #f76363;
+
+  --radius-sm:      6px;
+  --radius-md:      12px;
+  --radius-lg:      18px;
+
+  --shadow-card:    0 4px 24px rgba(0,0,0,0.4);
+  --shadow-modal:   0 24px 80px rgba(0,0,0,0.7);
+
+  --font-display:   'Syne', sans-serif;
+  --font-body:      'DM Sans', sans-serif;
+
+  --transition:     0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Reset ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { font-size: 15px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-base);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── App Shell ─────────────────────────────────────────────── */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(ellipse 80% 40% at 50% -10%, rgba(79,156,249,0.12) 0%, transparent 70%),
+    var(--bg-base);
+}
+
+/* ── Header ────────────────────────────────────────────────── */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(13, 15, 20, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 32px 0;
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.brand-icon {
+  font-size: 2rem;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 16px rgba(79,156,249,0.5));
+}
+
+.brand-title {
+  font-family: var(--font-display);
+  font-size: 1.7rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  background: linear-gradient(90deg, var(--text-primary) 60%, var(--accent-blue));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.brand-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Buttons ───────────────────────────────────────────────── */
+.btn-add {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, var(--accent-blue), #3b82f6);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 10px 22px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 0 20px rgba(79,156,249,0.3);
+  letter-spacing: 0.02em;
+}
+
+.btn-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 32px rgba(79,156,249,0.5);
+}
+
+.btn-add span { font-size: 1.1rem; }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent-blue), #3b82f6);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 10px 24px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 10px 20px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-secondary:hover { border-color: var(--border-focus); color: var(--text-primary); }
+
+.btn-sm { padding: 6px 12px; font-size: 0.82rem; }
+
+/* ── Main ──────────────────────────────────────────────────── */
+.app-main {
+  flex: 1;
+  padding: 28px 24px;
+  overflow-x: auto;
+}
