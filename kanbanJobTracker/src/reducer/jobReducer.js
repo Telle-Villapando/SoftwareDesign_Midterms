@@ -1,5 +1,7 @@
 export const initialState = {
   jobs: [],
+  loading: false,
+  error: null,
 };
 
 export function jobReducer(state, action) {
@@ -28,6 +30,18 @@ export function jobReducer(state, action) {
       return {
         ...state,
         jobs: state.jobs.filter(j => j.id !== action.payload),
+      };
+
+    case 'SET_LOADING':
+      return {
+        ...state,
+        loading: action.payload,
+      };
+
+    case 'SET_ERROR':
+      return {
+        ...state,
+        error: action.payload,
       };
 
     default:

@@ -7,47 +7,52 @@ import { jobReducer, initialState } from "./reducer/jobReducer";
 import "./App.css";
 import {api} from "./utils/api";
 
-export default function App() {
-  const [state, dispatch] = useReducer(jobReducer, initialState, (init) => {
-    const saved = localStorage.getItem("kanban-jobs");
-    if (saved) {
-      try {
-        return { ...init, jobs: JSON.parse(saved) };
-      } catch {
-        return init;
-      }
-    }
-    return init;
-  });
+const STAGES = ["applied", "interviewing", "offer", "rejected"];
 
+export default function App() {
+  const [state, dispatch] = useReducer(jobReducer, initialState);
   const [showModal, setShowModal] = useState(false);
   const [editJob, setEditJob] = useState(null);
   const [confetti, setConfetti] = useState(false);
 
+//Fetch all jobs from MongoDB on load 
   useEffect(() => {
-    api.getJobs().then(jobs => {
-      dispatch({ type: "SET_JOBS", payload: jobs });
-    });
+    api.getJobs()
+    .then(jobs => dispatch({ type: "SET_JOBS", payload: jobs }))
+    .catch(err => console.error("Failed to fetch jobs:", err));
   }, []);
 
 // add job
   const handleAddJob = async (jobData) => {
-    const newJob = await api.createJob(jobData);
-    dispatch({ type: "ADD_JOB", payload: newJob });
-    setShowModal(false);
+    try {
+      const newJob = await api.createJob(jobData);
+      dispatch({ type: "ADD_JOB", payload: newJob });
+      setShowModal(false);
+  }
+   catch (err) {
+      console.error("Failed to add job:", err);
+    }
   };
 
   //edit job
   const handleEditJob = async (jobData) => {
-    const updatedJob = await api.updateJob(editJob.id, jobData);
-    dispatch({ type: "EDIT_JOB_SUCCESS", payload: updatedJob });
-    setShowModal(false);
+    try {
+      const updatedJob = await api.updateJob(editJob.id, jobData);
+      dispatch({ type: "EDIT_JOB_SUCCESS", payload: updatedJob });
+      setShowModal(false);
+    } catch (err) {
+      console.error("Failed to edit job:", err);
+    }
   };
 
   // delete job
   const handleDeleteJob = async (id) => {
-    await api.deleteJob(id);
-    dispatch({ type: "DELETE_JOB", payload: id });
+    try {
+      await api.deleteJob(id);
+      dispatch({ type: "DELETE_JOB", payload: id });
+    } catch (err) {
+      console.error("Failed to delete job:", err);
+    }   
   };
 
 // move stage
@@ -59,11 +64,15 @@ export default function App() {
 
     if (newIndex < 0 || newIndex >= stages.length) return;
 
-    //const newStatus = stages[newIndex];
-    const updated = await api.updatedJob(id, {status: newStatus});
+    const newStatus = stages[newIndex];
     if (newStatus === "offer") setConfetti(true);
 
-    dispatch({ type: "MOVE_JOB_SUCCESS", payload: updated });
+    try {
+      const updatedJob = await api.updateJob(id, { ...job, status: newStatus });
+      dispatch({ type: "MOVE_JOB_SUCCESS", payload: updatedJob });
+    } catch (err) {
+      console.error("Failed to move job:", err);
+    }
   };
 
   const openEdit = (job) => {
@@ -97,12 +106,16 @@ export default function App() {
       </header>
 
       <main className="app-main">
-        <Board
-          jobs={state.jobs}
-          onMove={handleMoveJob}
-          onEdit={openEdit}
-          onDelete={handleDeleteJob}
-        />
+        {state.loading ? (
+          <div className="loading-state">Loading jobs...</div>
+        ) : (
+          <Board
+            jobs={state.jobs}
+            onMove={handleMoveJob}
+            onEdit={openEdit}
+            onDelete={handleDeleteJob}
+          />
+        )}
       </main>
 
       {showModal && (
@@ -115,3 +128,6 @@ export default function App() {
     </div>
   );
 }
+
+
+
