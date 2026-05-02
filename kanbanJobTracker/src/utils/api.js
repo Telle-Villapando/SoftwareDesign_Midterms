@@ -1,9 +1,8 @@
-const BASE = 'http://localhost:5000/api';
+const BASE = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
 
 export const api = {
   getJobs: () =>
-    fetch(`${BASE}/jobs`)
-      .then(r => r.json()),
+    fetch(`${BASE}/jobs`).then(r => r.json()),
 
   createJob: (data) =>
     fetch(`${BASE}/jobs`, {
