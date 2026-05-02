@@ -5,6 +5,7 @@ import JobModal from "./components/JobModal";
 import ConfettiEffect from "./components/ConfettiEffect";
 import { jobReducer, initialState } from "./reducer/jobReducer";
 import "./App.css";
+import {api} from "./utils/api";
 
 export default function App() {
   const [state, dispatch] = useReducer(jobReducer, initialState, (init) => {
@@ -24,25 +25,33 @@ export default function App() {
   const [confetti, setConfetti] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem("kanban-jobs", JSON.stringify(state.jobs));
-  }, [state.jobs]);
+    api.getJobs().then(jobs => {
+      dispatch({ type: "SET_JOBS", payload: jobs });
+    });
+  }, []);
 
-  const handleAddJob = (jobData) => {
-    dispatch({ type: "ADD_JOB", payload: jobData });
+// add job
+  const handleAddJob = async (jobData) => {
+    const newJob = await api.createJob(jobData);
+    dispatch({ type: "ADD_JOB", payload: newJob });
     setShowModal(false);
   };
 
-  const handleEditJob = (jobData) => {
-    dispatch({ type: "EDIT_JOB", payload: jobData });
-    setEditJob(null);
+  //edit job
+  const handleEditJob = async (jobData) => {
+    const updatedJob = await api.updateJob(editJob.id, jobData);
+    dispatch({ type: "EDIT_JOB_SUCCESS", payload: updatedJob });
     setShowModal(false);
   };
 
-  const handleDeleteJob = (id) => {
+  // delete job
+  const handleDeleteJob = async (id) => {
+    await api.deleteJob(id);
     dispatch({ type: "DELETE_JOB", payload: id });
   };
 
-  const handleMoveJob = (id, direction) => {
+// move stage
+  const handleMoveJob = async (id, direction) => {
     const job = state.jobs.find((j) => j.id === id);
     const stages = ["applied", "interviewing", "offer", "rejected"];
     const currentIndex = stages.indexOf(job.status);
@@ -50,10 +59,11 @@ export default function App() {
 
     if (newIndex < 0 || newIndex >= stages.length) return;
 
-    const newStatus = stages[newIndex];
+    //const newStatus = stages[newIndex];
+    const updated = await api.updatedJob(id, {status: newStatus});
     if (newStatus === "offer") setConfetti(true);
 
-    dispatch({ type: "MOVE_JOB", payload: { id, status: newStatus } });
+    dispatch({ type: "MOVE_JOB_SUCCESS", payload: updated });
   };
 
   const openEdit = (job) => {

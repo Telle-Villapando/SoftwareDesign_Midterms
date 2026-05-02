@@ -1,47 +1,33 @@
-import { v4 as uuidv4 } from "uuid";
-
 export const initialState = {
   jobs: [],
 };
 
 export function jobReducer(state, action) {
   switch (action.type) {
-    case "ADD_JOB":
+
+    case 'SET_JOBS':
       return {
         ...state,
-        jobs: [
-          ...state.jobs,
-          {
-            ...action.payload,
-            id: uuidv4(),
-            dateApplied: action.payload.dateApplied || new Date().toISOString().split("T")[0],
-            status: action.payload.status || "applied",
-          },
-        ],
+        jobs: action.payload.map(j => ({ ...j, id: j._id })),
       };
 
-    case "EDIT_JOB":
+    case 'ADD_JOB_SUCCESS':
+    case 'EDIT_JOB_SUCCESS':
+    case 'MOVE_JOB_SUCCESS': {
+      const incoming = { ...action.payload, id: action.payload._id };
+      const exists = state.jobs.some(j => j._id === incoming._id);
       return {
         ...state,
-        jobs: state.jobs.map((job) =>
-          job.id === action.payload.id ? { ...job, ...action.payload } : job
-        ),
+        jobs: exists
+          ? state.jobs.map(j => j._id === incoming._id ? incoming : j)
+          : [...state.jobs, incoming],
       };
+    }
 
-    case "DELETE_JOB":
+    case 'DELETE_JOB':
       return {
         ...state,
-        jobs: state.jobs.filter((job) => job.id !== action.payload),
-      };
-
-    case "MOVE_JOB":
-      return {
-        ...state,
-        jobs: state.jobs.map((job) =>
-          job.id === action.payload.id
-            ? { ...job, status: action.payload.status }
-            : job
-        ),
+        jobs: state.jobs.filter(j => j.id !== action.payload),
       };
 
     default:
