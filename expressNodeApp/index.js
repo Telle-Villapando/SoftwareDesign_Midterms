@@ -12,26 +12,18 @@ mongoose.connect(mongoURI)
   .then(() => console.log('Connected to MongoDB!'))
   .catch((err) => { console.error(err); process.exit(1); });
 
-  //middleware
-// app.use(cors());
-// app.use(express.json());
+// Middleware
 
 app.use(cors({
   origin: [
     'http://localhost:5173',                        // local dev
-    'https://your-app-name.azurestaticapps.net'     // production (add after deploy)
+    'https://icy-flower-0221d3900.azurestaticapps.net'     // production (add after deploy)
   ]
 }));
 
 // Jobs route
 const jobsRoute = require('./API/jobs');
 app.use('/api', jobsRoute);
-
-
-// const PORT = 5000;
-// app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-
-
 
 // then at the bottom
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

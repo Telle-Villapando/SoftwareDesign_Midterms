@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/105557ba-f650-4003-9bff-26bfb37f45e2/resourceGroups/kanban-job-tracker/providers/Microsoft.Web/sites/kanbanBackEnd",
+    "appService.deploySubpath": "expressNodeApp"
+}
