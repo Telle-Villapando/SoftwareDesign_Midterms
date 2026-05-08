@@ -17,7 +17,7 @@ mongoose.connect(mongoURI)
 app.use(cors({
   origin: [
     'http://localhost:5173',                        // local dev
-    'https://icy-flower-0221d3900.azurestaticapps.net'     // production (add after deploy)
+    'https://wonderful-rock-0e067aa00.7.azurestaticapps.net'      // production (add after deploy)
   ]
 }));
 
