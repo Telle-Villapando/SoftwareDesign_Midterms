@@ -26,7 +26,7 @@ export default function App() {
   const handleAddJob = async (jobData) => {
     try {
       const newJob = await api.createJob(jobData);
-      dispatch({ type: "ADD_JOB", payload: newJob });
+      dispatch({ type: "ADD_JOB", payload: response.data });
       setShowModal(false);
   }
    catch (err) {
@@ -37,7 +37,7 @@ export default function App() {
   //edit job
   const handleEditJob = async (jobData) => {
     try {
-      const updatedJob = await api.updateJob(editJob.id, jobData);
+      const updatedJob = await api.updateJob(editJob._id, jobData);
       dispatch({ type: "EDIT_JOB_SUCCESS", payload: updatedJob });
       setShowModal(false);
     } catch (err) {
