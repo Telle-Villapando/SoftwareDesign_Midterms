@@ -26,7 +26,7 @@ export default function App() {
   const handleAddJob = async (jobData) => {
     try {
       const response = await api.createJob(jobData);
-      dispatch({ type: "ADD_JOB", payload: response.data });
+      dispatch({ type: "ADD_JOB_SUCCESS", payload: response.data });
       setShowModal(false);
   }
    catch (err) {
