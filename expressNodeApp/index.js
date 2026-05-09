@@ -20,6 +20,7 @@ app.use(cors({
     'https://wonderful-rock-0e067aa00.7.azurestaticapps.net'      // static hosting URL
   ]
 }));
+app.use(express.json());
 
 // Jobs route
 const jobsRoute = require('./API/jobs');
