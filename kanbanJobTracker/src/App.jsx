@@ -25,7 +25,7 @@ export default function App() {
 // add job
   const handleAddJob = async (jobData) => {
     try {
-      const newJob = await api.createJob(jobData);
+      const response = await api.createJob(jobData);
       dispatch({ type: "ADD_JOB", payload: response.data });
       setShowModal(false);
   }
@@ -37,8 +37,8 @@ export default function App() {
   //edit job
   const handleEditJob = async (jobData) => {
     try {
-      const updatedJob = await api.updateJob(editJob._id, jobData);
-      dispatch({ type: "EDIT_JOB_SUCCESS", payload: updatedJob });
+      const response = await api.updateJob(editJob._id, jobData);
+      dispatch({ type: "EDIT_JOB_SUCCESS", payload: response.data });
       setShowModal(false);
     } catch (err) {
       console.error("Failed to edit job:", err);
@@ -57,7 +57,7 @@ export default function App() {
 
 // move stage
   const handleMoveJob = async (id, direction) => {
-    const job = state.jobs.find((j) => j.id === id);
+    const job = state.jobs.find((j) => j._id === id);
     const stages = ["applied", "interviewing", "offer", "rejected"];
     const currentIndex = stages.indexOf(job.status);
     const newIndex = direction === "forward" ? currentIndex + 1 : currentIndex - 1;
@@ -68,8 +68,8 @@ export default function App() {
     if (newStatus === "offer") setConfetti(true);
 
     try {
-      const updatedJob = await api.updateJob(id, { ...job, status: newStatus });
-      dispatch({ type: "MOVE_JOB_SUCCESS", payload: updatedJob });
+      const response = await api.updateJob(id, { ...job, status: newStatus });
+      dispatch({ type: "MOVE_JOB_SUCCESS", payload: response.data });
     } catch (err) {
       console.error("Failed to move job:", err);
     }
